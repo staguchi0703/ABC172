@@ -20,9 +20,56 @@
 
 #### 方針
 
+AとＢの累積和をとる
+
+最大をさがすために調べるが、
+Ａを調べ終わったあと、Aのindexを1増やしたときBは一個少ないところから検索を始めればよい。
+このようなAとBの検索範囲の自明な関係を使って探索したことなかったので要注意なテクニック
+
+
+```python
+res = 0
+j = M #ここはforの外でよい。iによってjの探索開始が変わるから
+for i, av in enumerate(memo_A):
+    if av > K:
+        break
+    else:
+        while av + memo_B[j] > K:
+            j -= 1
+        res = max(res,j+i)
+```
+
+
 #### 実装
 
 ```python:C.py
+
+N, M, K = [int(item) for item in input().split()]
+As = [int(item) for item in input().split()]
+Bs = [int(item) for item in input().split()]
+
+res = 0
+time = 0
+
+memo_A = [0]
+for i in range(N):
+    memo_A.append(As[i]+memo_A[-1])
+
+memo_B = [0]
+for i in range(M):
+    memo_B.append(Bs[i]+memo_B[-1])
+
+res = 0
+j = M
+for i, av in enumerate(memo_A):
+    if av > K:
+        break
+    else:
+        while av + memo_B[j] > K:
+            j -= 1
+        res = max(res,j+i)
+
+print(res)
 
 ```
 
